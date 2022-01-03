@@ -6,16 +6,18 @@ const Navigation = () => {
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand>
-          <Link to="/">Photo</Link>
-        </Navbar.Brand>
+      
+          <Link to="/" className="navbar-brand">
+            Photo
+          </Link>
+        
 
         <Nav className="me-auto">
-          <Nav.Link>
+        
             <NavLink to="/" className="nav-link">
               Home
             </NavLink>
-          </Nav.Link>
+         
         </Nav>
       </Container>
     </Navbar>
