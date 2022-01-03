@@ -1,8 +1,7 @@
 import React, { useState, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Col, Row, Card, Form, Button, Alert } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid";
-import {useAuthContext} from "../contexts/AuthContext";
+import { useNavigate} from "react-router-dom";
+import { useAuthContext } from "../contexts/AuthContext";
+import RegistrationForm from "../components/RegistrationForm";
 
 const Login = () => {
   const { login } = useAuthContext();
@@ -16,11 +15,13 @@ const Login = () => {
     {
       id: "email",
       label: "Email",
+      type: "email",
       ref: emailRef,
     },
     {
       id: "password",
       label: "Password",
+      type: "password",
       ref: passwordRef,
     },
   ];
@@ -28,6 +29,7 @@ const Login = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    console.log(emailRef.current.value, passwordRef.current.value);
     // login
     try {
       setLoading(true);
@@ -40,41 +42,14 @@ const Login = () => {
     }
   };
 
-
   return (
-    <>
-      <Row>
-        <Col md={{ span: 6, offset: 3 }} className="my-4">
-          <Card>
-            <Card.Body>
-              <Card.Title className="mb-3 text-center">Log In</Card.Title>
-
-              {error && <Alert variant="danger">{error}</Alert>}
-
-              <Form onSubmit={handleLoginSubmit}>
-                {loginFields.map((field) => (
-                  <Form.Group id={field.id} className="mb-3" key={uuidv4()}>
-                    <Form.Label>{field.label}</Form.Label>
-                    <Form.Control type="email" ref={field.ref} required />
-                  </Form.Group>
-                ))}
-                <Button disabled={loading} type="submit" variant="dark">
-                  Log In
-                </Button>
-              </Form>
-
-              <div className="text-center mt-3">
-                <Link to="/reset-password">Forgot Password?</Link>
-              </div>
-            </Card.Body>
-          </Card>
-
-          <div className="text-center mt-3">
-            Need an account? <Link to="/signup">Sign Up</Link>
-          </div>
-        </Col>
-      </Row>
-    </>
+    <RegistrationForm
+      title={"Log In"}
+      fields={loginFields}
+      handleSubmit={handleLoginSubmit}
+      error={error}
+      loading={loading}
+    />
   );
 };
 

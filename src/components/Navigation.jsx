@@ -4,7 +4,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 
 const Navigation = () => {
-  const [error, setError] = useState()
+  const [error, setError] = useState();
   const { currentUser, logout } = useAuthContext();
   const navigate = useNavigate();
 
@@ -17,8 +17,9 @@ const Navigation = () => {
       navigate("/");
 
       /* Catch error */
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
+      console.log("Log Out error", error);
     }
   };
 
