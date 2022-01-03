@@ -64,7 +64,7 @@ const Login = () => {
               </Form>
 
               <div className="text-center mt-3">
-                <Link to="/forgot-password">Forgot Password?</Link>
+                <Link to="/reset-password">Forgot Password?</Link>
               </div>
             </Card.Body>
           </Card>

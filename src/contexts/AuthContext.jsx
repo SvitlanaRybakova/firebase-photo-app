@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
+  updateProfile,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  getAuth,
 } from "firebase/auth";
 import { PuffLoader } from "react-spinners";
 import { auth } from "../firebase";
@@ -22,6 +24,12 @@ const AuthContextProvider = ({ children }) => {
   const signup = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
+
+  	const setDisplayName = (name) => {
+      return updateProfile(currentUser, {
+        displayName: name,
+      });
+    };
 
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -51,8 +59,10 @@ const AuthContextProvider = ({ children }) => {
     logout,
     signup,
     resetPassword,
+    setDisplayName,
   };
 
+  console.log(currentUser);
   return (
     <AuthContext.Provider value={values}>
       {loading && (

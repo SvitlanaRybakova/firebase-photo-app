@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useAuthContext } from "../contexts/AuthContext";
 
 const SignUp = () => {
-  const { signup } = useAuthContext();
+  const { signup, setDisplayName, currentUser } = useAuthContext();
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -13,32 +13,34 @@ const SignUp = () => {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
-    const signUpFields = [
-      {
-        id: "email",
-        label: "Email",
-        ref: emailRef,
-      },
-      {
-        id: "password",
-        label: "Password",
-        ref: passwordRef,
-      },
-      {
-        id: "confirm-password",
-        label: "Confirm Password",
-        ref: confirmPasswordRef,
-      },
-    ];
+  const signUpFields = [
 
-  const handleSignUpSubmit = async (e) => {
+    {
+      id: "email",
+      label: "Email",
+      ref: emailRef,
+    },
+    {
+      id: "password",
+      label: "Password",
+      ref: passwordRef,
+    },
+    {
+      id: "confirm-password",
+      label: "Confirm Password",
+      ref: confirmPasswordRef,
+    },
+  ];
+
+  const handleSignUpSubmit = (e) => {
     e.preventDefault();
     setError(null);
 
     if (passwordRef.current.value == confirmPasswordRef.current.value) {
       try {
         setLoading(true);
-        await signup(emailRef.current.value, passwordRef.current.value);
+        signup(emailRef.current.value, passwordRef.current.value);
+
         navigate("/");
       } catch (e) {
         setError(e.message);
@@ -71,7 +73,7 @@ const SignUp = () => {
               </Form>
 
               <div className="text-center mt-3">
-                <Link to="/forgot-password">Forgot Password?</Link>
+                <Link to="/reset-password">Forgot Password?</Link>
               </div>
             </Card.Body>
           </Card>
