@@ -5,9 +5,6 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
-  updateEmail,
-  updatePassword,
-  updateProfile,
 } from "firebase/auth";
 import { PuffLoader } from "react-spinners";
 import { auth } from "../firebase";
@@ -48,7 +45,6 @@ const AuthContextProvider = ({ children }) => {
   }, []);
 
   const values = {
-    // here be everything the children needs/should be able to use
     currentUser,
     loading,
     login,
