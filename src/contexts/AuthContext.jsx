@@ -62,7 +62,6 @@ const AuthContextProvider = ({ children }) => {
     setDisplayName,
   };
 
-  console.log(currentUser);
   return (
     <AuthContext.Provider value={values}>
       {loading && (
