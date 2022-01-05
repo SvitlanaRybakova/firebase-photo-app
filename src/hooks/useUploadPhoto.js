@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   collection,
   addDoc,
@@ -6,20 +6,17 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  query,
+  where,
+  getDocs,
 } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useAuthContext } from "../contexts/AuthContext";
 import { db, storage } from "../firebase";
-import useCheckAlbum from "./useCheckAlbum";
+
 
 const useUploadPhoto = () => {
-  const {
-    setAlbumName,
-    albumFirestoreId,
-    totalPhotosInFirestore,
-    photosInFirestore,
-  } = useCheckAlbum();
-
+ 
   const [error, setError] = useState(null);
   const [isError, setIsError] = useState(null);
   const [isMutating, setIsMutating] = useState(null);
@@ -27,16 +24,34 @@ const useUploadPhoto = () => {
   const [progress, setProgress] = useState(null);
 
   const { currentUser } = useAuthContext();
+  
+  const findAlbum = async (albumName) => {
+    //  find the current album in db (get all collection due to don't know album id)
+    const ref = collection(db, `${currentUser.uid}`);
+    const q = query(ref, where("album", "==", albumName));
+    const querySnapshot = await getDocs(q);
+
+    const docs = querySnapshot.docs;
+    if (docs.length > 0) {
+      return {
+        id: docs[0].id,
+        ...docs[0].data(),
+      };
+    } else {
+      return null;
+    }
+  };
 
   const mutate = async (photo, albumName) => {
-    setAlbumName(albumName);
-    // reset internal state
+    // checks that the current album is exists in the database
+    const album = await findAlbum(albumName);
+
     setError(null);
     setIsError(null);
     setIsSuccess(null);
     setIsMutating(true);
 
-    // check for right extantion
+    // check for right extension
     if (!photo instanceof File) {
       setError("That is no file");
       setIsError(true);
@@ -44,18 +59,18 @@ const useUploadPhoto = () => {
       return;
     }
 
-    // construct filename to save image as
+    // *** SAVE IN STORAGE ***
+    // construct filename to save photo
     const storageFilename = `${Date.now()}-${photo.name}`;
 
-    // construct full path in storage to save image as
-    // const storageFullPath = `memes/${currentUser.uid}/${storageFilename}`;
+    // construct full path in storage to save photo
     const storageFullPath = `${currentUser.uid}/${albumName}/${storageFilename}`;
 
     try {
-      // create a reference in storage to upload image to
+      // create a reference in storage to upload photo
       const storageRef = ref(storage, storageFullPath);
 
-      // start upload of image
+      // start upload of photo
       const uploadTask = uploadBytesResumable(storageRef, photo);
 
       // attach upload observer
@@ -73,20 +88,17 @@ const useUploadPhoto = () => {
       // wait for upload to be completed
       await uploadTask.then();
 
-      //todo need url to albom!  get download url to uploaded image
       const url = await getDownloadURL(storageRef);
 
-      // **** STORED IN DB ****
-
+      // **** SAVE IN DB ****
       // check if this albom has been already created albomFirestoreId
-      if (albumFirestoreId) {
-        console.log("album exist", albumFirestoreId);
-        const albumDocRef = doc(db, `${currentUser.uid}`, albumFirestoreId);
+      if (album?.id) {
+        const albumDocRef = doc(db, `${currentUser.uid}`, album.id);
         await updateDoc(albumDocRef, {
-          album: albumName,
+          // album: albumName,
           created: serverTimestamp(),
-          totalPhotos: totalPhotosInFirestore + 1,
-          path: `${currentUser.uid}/${albomName}`,
+          totalPhotos: album.totalPhotos + 1,
+          path: `${currentUser.uid}/${albumName}`,
           photos: arrayUnion({
             name: photo.name,
             owner: currentUser.uid,
@@ -95,11 +107,9 @@ const useUploadPhoto = () => {
             url,
           }),
         });
-      }
-      // create new albom
-      if (!albumFirestoreId) {
-        console.log("new albom", albumFirestoreId);
-        try {
+        // create new albom
+      } else {
+        
           const collectionRef = collection(db, `${currentUser.uid}`);
           await addDoc(collectionRef, {
             album: albumName,
@@ -116,17 +126,13 @@ const useUploadPhoto = () => {
               },
             ],
           });
-        } catch (e) {
-          console.log(e.message);
-        }
       }
 
       setProgress(null);
       setIsSuccess(true);
       setIsMutating(false);
     } catch (e) {
-      console.log("ERROR!", e);
-
+      console.warn("Error when uploading the photo", e.message);
       setError(e.message);
       setIsError(true);
       setIsMutating(false);
