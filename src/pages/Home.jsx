@@ -8,7 +8,7 @@ import AlbumGrid from '../components/AlbumGrid'
 
 const Home = () => {
   const { data } = useGetAllAlbums();
-  console.log(data);
+  // console.log(data);
   // modal
   const [show, setShow] = useState(false);
 

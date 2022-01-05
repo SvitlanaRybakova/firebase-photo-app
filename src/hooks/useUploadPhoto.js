@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   collection,
   addDoc,
@@ -14,17 +14,25 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useAuthContext } from "../contexts/AuthContext";
 import { db, storage } from "../firebase";
 
-
 const useUploadPhoto = () => {
- 
   const [error, setError] = useState(null);
   const [isError, setIsError] = useState(null);
   const [isMutating, setIsMutating] = useState(null);
   const [isSuccess, setIsSuccess] = useState(null);
   const [progress, setProgress] = useState(null);
 
+  const [totalPhotos, setTotalPhotos] = useState(null);
+
   const { currentUser } = useAuthContext();
-  
+
+  useEffect(() => {
+    // hide messages
+    setTimeout(() => {
+      setIsError(null);
+      setIsSuccess(null);
+    }, 3000);
+  }, [isError, isSuccess]);
+
   const findAlbum = async (albumName) => {
     //  find the current album in db (get all collection due to don't know album id)
     const ref = collection(db, `${currentUser.uid}`);
@@ -109,25 +117,24 @@ const useUploadPhoto = () => {
         });
         // create new albom
       } else {
-        
-          const collectionRef = collection(db, `${currentUser.uid}`);
-          await addDoc(collectionRef, {
-            album: albumName,
-            created: serverTimestamp(),
-            path: `${currentUser.uid}/${albumName}`,
-            totalPhotos: 1,
-            photos: [
-              {
-                name: photo.name,
-                owner: currentUser.uid,
-                size: photo.size,
-                type: photo.type,
-                url,
-              },
-            ],
-          });
+        const collectionRef = collection(db, `${currentUser.uid}`);
+        await addDoc(collectionRef, {
+          album: albumName,
+          created: serverTimestamp(),
+          path: `${currentUser.uid}/${albumName}`,
+          totalPhotos: 1,
+          photos: [
+            {
+              name: photo.name,
+              owner: currentUser.uid,
+              size: photo.size,
+              type: photo.type,
+              url,
+            },
+          ],
+        });
       }
-
+      setTotalPhotos(album ? album.totalPhotos + 1 : 1);
       setProgress(null);
       setIsSuccess(true);
       setIsMutating(false);
@@ -146,6 +153,7 @@ const useUploadPhoto = () => {
     isSuccess,
     mutate,
     progress,
+    totalPhotos,
   };
 };
 
