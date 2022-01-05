@@ -1,5 +1,6 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
+import { ReactQueryDevtools } from "react-query/devtools";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navigation from "./components/Navigation";
 import HomePage from "./pages/Home";
@@ -17,6 +18,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </div>
   );
 }

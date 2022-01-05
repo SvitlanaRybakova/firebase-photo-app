@@ -6,9 +6,8 @@ import { useAuthContext } from "../contexts/AuthContext";
 const useGetAlbum = () => {
   const { currentUser } = useAuthContext();
 
-  // const [data, setData] = useState(null);
+
   const [albumName, setAlbumName] = useState(null);
-  // const [isAlbomExistInFirestore, setAlbomExistInFirestore] = useState(null)
   const [albumFirestoreId, setAlbumFirestoreId] = useState(null);
   const [totalPhotosInFirestore, setPhotosInFirestore] = useState(null);
   const [photosInFirestore, setPhotoInFirestore] = useState(null);
@@ -25,7 +24,6 @@ const useGetAlbum = () => {
             ...doc.data(),
           };
         });
-        // setData(data);
         //  got an array because of the collection - method (firebase API). Requires iteration to get the values of interest Can't use doc due to id is unknown
         if (data) {
           console.log("inside");
