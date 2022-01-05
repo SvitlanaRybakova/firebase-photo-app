@@ -4,14 +4,13 @@ import {
   addDoc,
   serverTimestamp,
   doc,
-  setDoc,
   updateDoc,
   arrayUnion,
 } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useAuthContext } from "../contexts/AuthContext";
 import { db, storage } from "../firebase";
-import useGetAlbum from "./useGetAlbum";
+import useCheckAlbum from "./useCheckAlbum";
 
 const useUploadPhoto = () => {
   const {
@@ -19,7 +18,7 @@ const useUploadPhoto = () => {
     albumFirestoreId,
     totalPhotosInFirestore,
     photosInFirestore,
-  } = useGetAlbum();
+  } = useCheckAlbum();
 
   const [error, setError] = useState(null);
   const [isError, setIsError] = useState(null);

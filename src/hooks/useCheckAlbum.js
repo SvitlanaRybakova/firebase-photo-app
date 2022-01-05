@@ -3,7 +3,7 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
 
-const useGetAlbum = () => {
+const useCheckAlbum = () => {
   const { currentUser } = useAuthContext();
 
 
@@ -54,4 +54,4 @@ const useGetAlbum = () => {
   };
 };
 
-export default useGetAlbum;
+export default useCheckAlbum;

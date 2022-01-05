@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { Container, Button } from "react-bootstrap";
-import { useDropzone } from "react-dropzone";
+import { Container, Button, Card } from "react-bootstrap";
 import { AiOutlinePlus } from "react-icons/ai";
 import CreateAlbum from "../components/CreateAlbum";
-import useGetAlbum from '../hooks/useGetAlbum'
+import useGetAllAlbums from "../hooks/useGetAllAlbums";
+
+import AlbumGrid from '../components/AlbumGrid'
 
 const Home = () => {
+  const { data } = useGetAllAlbums();
+  console.log(data);
   // modal
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const {data} = useGetAlbum()
-// console.log('data from db', data);
 
   return (
     <>
@@ -26,8 +26,13 @@ const Home = () => {
           <AiOutlinePlus />
           <span className="mx-3">Add a new album</span>
         </Button>
-        <h1>This is Home page</h1>
-        <CreateAlbum show={show} handleClose={handleClose}/>
+        <h1>Here are all your photo albums</h1>
+        <div className="d-flex flex-wrap align-items-center justify-content-between">
+          {data && <AlbumGrid data={data} />
+            
+            }
+        </div>
+        <CreateAlbum show={show} handleClose={handleClose} />
       </Container>
     </>
   );
