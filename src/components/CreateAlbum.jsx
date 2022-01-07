@@ -1,31 +1,27 @@
 import React, { useRef, useCallback, useState } from "react";
 import { Modal, Form, Alert } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
-import { AiFillWallet } from "react-icons/ai";
 // import useUploadPhoto from "../hooks/useUploadPhoto";
 import useUploadPhoto from "../hooks/useUploadPhoto";
 
-const CreateAlbum = ({ show, handleClose }) => {
+const CreateAlbum = ({ albumTitle, show, handleClose }) => {
   const albumNameRef = useRef();
-  const [files, setFiles] = useState([]);
-
-  const {
-    mutate,
-    error,
-    isError,
-    isSuccess,
-  } = useUploadPhoto();
+  const { mutate, error, isError, isSuccess } = useUploadPhoto();
 
   const onDrop = useCallback((acceptedFiles) => {
     if (!acceptedFiles.length) {
       return;
     }
-    // check if albomName has a string title (use is for full storage path)
-    if (!albumNameRef.current.value) {
-      return;
+
+    if(albumTitle){
+       mutate(acceptedFiles, albumTitle);
     }
-    //upload a photo to storage and db
-    mutate(acceptedFiles, albumNameRef.current.value);
+    // check if albomName has a string title (use is for full storage path)
+    if (albumNameRef.current?.value) {
+      //upload a photo to storage and db
+      mutate(acceptedFiles, albumNameRef.current.value);
+    }
+  
   }, []);
 
   const {
@@ -44,19 +40,23 @@ const CreateAlbum = ({ show, handleClose }) => {
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title style={{ width: "90%" }}>
-          <Form.Control
-            ref={albumNameRef}
-            type="text"
-            placeholder="Write the name of the albom..."
-            id="inputAlbomTitle"
-            aria-describedby="albomTitle"
-            required
-            className={
-              !albumNameRef.current?.value
-                ? "border border-danger"
-                : "border border-secondary"
-            }
-          />
+          {albumTitle ? (
+            albumTitle
+          ) : (
+            <Form.Control
+              ref={albumNameRef}
+              type="text"
+              placeholder="Write the name of the albom..."
+              id="inputAlbomTitle"
+              aria-describedby="albomTitle"
+              required
+              className={
+                !albumNameRef.current?.value
+                  ? "border border-danger"
+                  : "border border-secondary"
+              }
+            />
+          )}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -67,7 +67,7 @@ const CreateAlbum = ({ show, handleClose }) => {
             isDragReject ? "drag-reject" : ""
           }`}
         >
-          <input {...getInputProps()} disabled={!albumNameRef.current?.value} />
+          <input {...getInputProps()} disabled={!albumNameRef.current?.value &&!albumTitle} />
           {isDragActive ? (
             isDragAccept ? (
               <p>Drop the files here ...</p>
