@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Button, Card } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import { AiOutlinePlus } from "react-icons/ai";
 import CreateAlbum from "../components/CreateAlbum";
 import useGetAllAlbums from "../hooks/useGetAllAlbums";

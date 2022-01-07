@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState } from "react";
-import { Modal, Form, ProgressBar, Alert } from "react-bootstrap";
+import { Modal, Form, Alert } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
 import { AiFillWallet } from "react-icons/ai";
 // import useUploadPhoto from "../hooks/useUploadPhoto";
