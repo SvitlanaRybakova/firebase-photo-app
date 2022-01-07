@@ -4,11 +4,10 @@ import { AiOutlinePlus } from "react-icons/ai";
 import CreateAlbum from "../components/CreateAlbum";
 import useGetAllAlbums from "../hooks/useGetAllAlbums";
 
-import AlbumGrid from '../components/AlbumGrid'
+import AlbumGrid from "../components/AlbumGrid";
 
 const Home = () => {
-  const { data } = useGetAllAlbums();
-  // console.log(data);
+  const data = useGetAllAlbums();
   // modal
   const [show, setShow] = useState(false);
 
@@ -28,9 +27,7 @@ const Home = () => {
         </Button>
         <h1>Here are all your photo albums</h1>
         <div className="d-flex flex-wrap align-items-center justify-content-between">
-          {data && <AlbumGrid data={data} />
-            
-            }
+          {data && <AlbumGrid data={data} />}
         </div>
         <CreateAlbum show={show} handleClose={handleClose} />
       </Container>

@@ -1,15 +1,16 @@
-import React, { useRef, useCallback } from "react";
-import { Button, Modal, Form, ProgressBar, Alert } from "react-bootstrap";
+import React, { useRef, useCallback, useState } from "react";
+import { Modal, Form, ProgressBar, Alert } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
+import { AiFillWallet } from "react-icons/ai";
+// import useUploadPhoto from "../hooks/useUploadPhoto";
 import useUploadPhoto from "../hooks/useUploadPhoto";
 
 const CreateAlbum = ({ show, handleClose }) => {
   const albumNameRef = useRef();
+  const [files, setFiles] = useState([]);
 
   const {
     mutate,
-    progress,
-    totalPhotos,
     error,
     isError,
     isSuccess,
@@ -23,8 +24,8 @@ const CreateAlbum = ({ show, handleClose }) => {
     if (!albumNameRef.current.value) {
       return;
     }
-    //upload a photo to storage
-    mutate(acceptedFiles[0], albumNameRef.current.value);
+    //upload a photo to storage and db
+    mutate(acceptedFiles, albumNameRef.current.value);
   }, []);
 
   const {
@@ -35,7 +36,7 @@ const CreateAlbum = ({ show, handleClose }) => {
     isDragReject,
   } = useDropzone({
     accept: "image/gif, image/jpeg, image/png, image/webp",
-    maxFiles: 1,
+    maxFiles: 10,
     onDrop,
   });
 
@@ -59,8 +60,6 @@ const CreateAlbum = ({ show, handleClose }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h5>Uploaded {totalPhotos ? totalPhotos : "0"} photo(s)</h5>
-        <ProgressBar striped variant="success" animated now={progress} />
         <div
           {...getRootProps()}
           id="dropzone-wrapper"
@@ -85,12 +84,6 @@ const CreateAlbum = ({ show, handleClose }) => {
           <Alert variant="success">The photo has been uploaded</Alert>
         )}
         {isError && <Alert variant="danger">{error}</Alert>}
-        {/* <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button> */}
-        {/* <Button variant="success" onClick={handleClose}>
-          Create
-        </Button> */}
       </div>
     </Modal>
   );
