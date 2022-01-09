@@ -1,56 +1,60 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Container, Row, Col, Button, Alert, Card } from "react-bootstrap";
 import { PuffLoader } from "react-spinners";
+import { BsFillShareFill } from "react-icons/bs";
+import { AiFillEdit } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
-import CreateAlbum from "../components/CreateAlbum";
 import useGetPhotosFromAlbum from "../hooks/useGetPhotosFromAlbum";
-import useChangeAlbumName from "../hooks/useChangeAlbumName";
-import { useAuthContext } from "../contexts/AuthContext";
 
+import UploadPhotoForm from "../components/UploadPhotoForm";
+import ChangeTitleForm from "../components/ChangeTitleForm";
 
 const AlbumPage = () => {
-  const {currentUser} = useAuthContext()
   const { title } = useParams();
-  const navigate = useNavigate();
   const { data, isLoading, error, isError } = useGetPhotosFromAlbum(title);
-  console.log(data);
-  const { changeAlbumName } = useChangeAlbumName(title);
+
   // modal
-  const [show, setShow] = useState(false);
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const handleUploadFormClose = () => setShowUploadForm(false);
+  const handleUploadFormShow = () => setShowUploadForm(true);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // modal title
+  const [showTitleForm, setShowTitleForm] = useState(false);
+  const handleTitleFormClose = () => setShowTitleForm(false);
+  const handleTitleFormShow = () => setShowTitleForm(true);
 
-  const handleChangeTitleClick = (newName, data) => {
-    console.log("data from album page", data);
-    changeAlbumName(newName, data);
-    navigate(`/${currentUser.uid}/${newName}`);
-  };
   return (
     <>
       <Container>
-        <Row className="my-4">
-          <Col>
+        <Row className="my-4 align-items-center">
+          <Col md={8} className="d-flex align-items-center">
             <h1 className="">{title}</h1>
+            <div style={{ cursor: "pointer", marginLeft: "60px" }}>
+              <AiFillEdit
+                style={{ marginRight: "30px" }}
+                onClick={handleTitleFormShow}
+                color={"gray"}
+                size={20}
+              />
+              <BsFillShareFill color={"gray"} />
+            </div>
           </Col>
-          <Col>
-            <Button
-              variant="outline-dark"
-              onClick={() => handleChangeTitleClick("testKofta14", data)}
-            >
-              Change Album Name
-            </Button>
-          </Col>
-          <Col>
-            <Button variant="outline-dark" onClick={handleShow}>
+          <Col className="text-end">
+            <Button variant="outline-dark" onClick={handleUploadFormShow}>
               Add photo
             </Button>
           </Col>
         </Row>
-        {isLoading && <PuffLoader color={"#888"} size={50} />}
+        <hr />
+        {isLoading && (
+          <div style={{ position: "absolute", top: "175px", right: "55%" }}>
+            <PuffLoader color={"#888"} size={50} />{" "}
+          </div>
+        )}
         {isError && <Alert variant="warning">{error.message}</Alert>}
-        <Row>
+
+        <Row className="my-5">
           {data &&
             data.map((photo) => (
               <Card style={{ width: "10rem" }} className="m-1" key={uuidv4()}>
@@ -64,16 +68,21 @@ const AlbumPage = () => {
                     {photo.name}
                   </figcaption>
                 </figure>
-                {/* <Card.Footer>
-                <small className="text-muted">
-                  Last updated {firebaseTimestampToString(photo.created)}
-                </small>
-              </Card.Footer> */}
               </Card>
             ))}
         </Row>
       </Container>
-      <CreateAlbum show={show} handleClose={handleClose} albumTitle={title} />
+      <UploadPhotoForm
+        show={showUploadForm}
+        handleClose={handleUploadFormClose}
+        albumTitle={title}
+      />
+      {/* change title */}
+      <ChangeTitleForm
+        show={showTitleForm}
+        handleClose={handleTitleFormClose}
+        data={data}
+      />
     </>
   );
 };

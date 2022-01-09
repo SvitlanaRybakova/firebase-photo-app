@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Button } from "react-bootstrap";
 import { AiOutlinePlus } from "react-icons/ai";
-import CreateAlbum from "../components/CreateAlbum";
+import UploadPhotoForm from "../components/UploadPhotoForm";
 import useGetAllAlbums from "../hooks/useGetAllAlbums";
 
 import AlbumGrid from "../components/AlbumGrid";
@@ -29,7 +29,7 @@ const Home = () => {
         <div className="d-flex flex-wrap align-items-center justify-content-between">
           {data && <AlbumGrid data={data} />}
         </div>
-        <CreateAlbum show={show} handleClose={handleClose} />
+        <UploadPhotoForm show={show} handleClose={handleClose} />
       </Container>
     </>
   );

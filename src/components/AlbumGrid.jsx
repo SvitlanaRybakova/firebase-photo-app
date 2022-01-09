@@ -9,7 +9,6 @@ const AlbumGrid = ({ data}) => {
   const {currentUser} = useAuthContext()
   const navigation = useNavigate();
 
-  console.log(data);
   return data.map((album) => (
     <Card style={{ width: "10rem" }} className="my-3" key={uuidv4()}>
       <Card.Img style={{ height: "9rem" }} variant="top" src={album.url} />

@@ -1,27 +1,17 @@
-import { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { useState } from "react";
+import { doc,updateDoc,} from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
-import useGetPhotosFromAlbum from "./useGetPhotosFromAlbum";
 
-const useChangeAlbumName = (currentAlbumName) => {
+const useChangeAlbumName = () => {
   const { currentUser } = useAuthContext();
-  // const { data } = useGetPhotosFromAlbum(currentAlbumName);
-
+ 
   const [error, setError] = useState(null);
   const [isError, setIsError] = useState(null);
   const [isMutating, setIsMutating] = useState(null);
   const [isSuccess, setIsSuccess] = useState(null);
 
   const mutate = async (id, newTitle) => {
-    console.log("id", id, currentUser);
     const ref = doc(db, `${currentUser.uid}`, `${id}`);
     await updateDoc(ref, {
       album: newTitle,

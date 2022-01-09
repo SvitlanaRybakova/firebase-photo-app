@@ -4,7 +4,7 @@ import { useDropzone } from "react-dropzone";
 // import useUploadPhoto from "../hooks/useUploadPhoto";
 import useUploadPhoto from "../hooks/useUploadPhoto";
 
-const CreateAlbum = ({ albumTitle, show, handleClose }) => {
+const UploadPhotoForm = ({ albumTitle, show, handleClose }) => {
   const albumNameRef = useRef();
   const { mutate, error, isError, isSuccess } = useUploadPhoto();
 
@@ -46,9 +46,9 @@ const CreateAlbum = ({ albumTitle, show, handleClose }) => {
             <Form.Control
               ref={albumNameRef}
               type="text"
-              placeholder="Write the name of the albom..."
-              id="inputAlbomTitle"
-              aria-describedby="albomTitle"
+              placeholder="Write the name of the album..."
+              id="inputAlbumTitle"
+              aria-describedby="albumTitle"
               required
               className={
                 !albumNameRef.current?.value
@@ -89,4 +89,4 @@ const CreateAlbum = ({ albumTitle, show, handleClose }) => {
   );
 };
 
-export default CreateAlbum;
+export default UploadPhotoForm;
