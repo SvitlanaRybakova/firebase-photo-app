@@ -9,12 +9,13 @@ import useGetPhotosFromAlbum from "../hooks/useGetPhotosFromAlbum";
 
 import UploadPhotoForm from "../components/UploadPhotoForm";
 import ChangeTitleForm from "../components/ChangeTitleForm";
+import LinkToChare from "../components/LinkToShare";
 
 const AlbumPage = () => {
   const { title } = useParams();
   const { data, isLoading, error, isError } = useGetPhotosFromAlbum(title);
-
-  // modal
+ 
+  // modal upload photo
   const [showUploadForm, setShowUploadForm] = useState(false);
   const handleUploadFormClose = () => setShowUploadForm(false);
   const handleUploadFormShow = () => setShowUploadForm(true);
@@ -23,6 +24,11 @@ const AlbumPage = () => {
   const [showTitleForm, setShowTitleForm] = useState(false);
   const handleTitleFormClose = () => setShowTitleForm(false);
   const handleTitleFormShow = () => setShowTitleForm(true);
+
+  // modal share link
+  const [showLinkToShare, setShowLinkToShare] = useState(false);
+  const handleLinkToShareClose = () => setShowLinkToShare(false);
+  const handleLinkToShareShow = () => setShowLinkToShare(true);
 
   return (
     <>
@@ -37,7 +43,7 @@ const AlbumPage = () => {
                 color={"gray"}
                 size={20}
               />
-              <BsFillShareFill color={"gray"} />
+              <BsFillShareFill onClick={handleLinkToShareShow} color={"gray"} />
             </div>
           </Col>
           <Col className="text-end">
@@ -72,16 +78,20 @@ const AlbumPage = () => {
             ))}
         </Row>
       </Container>
+      {/* modals */}
       <UploadPhotoForm
         show={showUploadForm}
         handleClose={handleUploadFormClose}
         albumTitle={title}
       />
-      {/* change title */}
       <ChangeTitleForm
         show={showTitleForm}
         handleClose={handleTitleFormClose}
         data={data}
+      />
+      <LinkToChare
+        show={showLinkToShare}
+        handleClose={handleLinkToShareClose}
       />
     </>
   );
