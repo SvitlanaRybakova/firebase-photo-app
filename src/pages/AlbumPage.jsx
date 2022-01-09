@@ -14,7 +14,6 @@ import LinkToChare from "../components/LinkToShare";
 const AlbumPage = () => {
   const { title } = useParams();
   const { data, isLoading, error, isError } = useGetPhotosFromAlbum(title);
- 
   // modal upload photo
   const [showUploadForm, setShowUploadForm] = useState(false);
   const handleUploadFormClose = () => setShowUploadForm(false);
@@ -35,7 +34,12 @@ const AlbumPage = () => {
       <Container>
         <Row className="my-4 align-items-center">
           <Col md={8} className="d-flex align-items-center">
-            <h1 className="">{title}</h1>
+            <h1 className="">
+              {title}{" "}
+              <span className="fs-6 text-secondary">
+                {data && `(${data.length} photos)`}
+              </span>
+            </h1>
             <div style={{ cursor: "pointer", marginLeft: "60px" }}>
               <AiFillEdit
                 style={{ marginRight: "30px" }}

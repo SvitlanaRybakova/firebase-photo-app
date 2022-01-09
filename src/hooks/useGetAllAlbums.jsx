@@ -29,10 +29,7 @@ const useGetAllAlbums = () => {
       // group all photos in album
       const albums = Object.entries(groupBy(data, "album")).map(
         ([, v]) => v[0]);
-      //  const albums = Object.entries(groupBy(data, "test2")).map(
-      //    ([, v]) => v
-      //  );
-      console.log(albums);
+    
       setData(albums);
     });
     return unsubscribe;
