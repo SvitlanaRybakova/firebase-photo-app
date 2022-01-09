@@ -23,7 +23,7 @@ const ChangeTitle = ({ show, handleClose, data }) => {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title> Change the album name </Modal.Title>
+        <Modal.Title> Type the album name </Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ width: "90%" }}>
         <Form.Control

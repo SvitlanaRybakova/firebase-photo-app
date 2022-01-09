@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Row, Col, Button, Alert, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Alert } from "react-bootstrap";
 import { PuffLoader } from "react-spinners";
 import { BsFillShareFill } from "react-icons/bs";
 import { AiFillEdit } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
-import useGetPhotosFromAlbum from "../hooks/useGetPhotosFromAlbum";
 
+import useGetPhotosFromAlbum from "../hooks/useGetPhotosFromAlbum";
+import { usePhotosContext } from "../contexts/PhotosContext";
+import PhotoCard from "../components/PhotoCard";
 import UploadPhotoForm from "../components/UploadPhotoForm";
 import ChangeTitleForm from "../components/ChangeTitleForm";
 import LinkToChare from "../components/LinkToShare";
@@ -14,6 +16,36 @@ import LinkToChare from "../components/LinkToShare";
 const AlbumPage = () => {
   const { title } = useParams();
   const { data, isLoading, error, isError } = useGetPhotosFromAlbum(title);
+
+  const { pickedPhotos, setPickedPhoto } = usePhotosContext();
+
+  useEffect(() => {
+    renderButton();
+  }, [pickedPhotos]);
+
+  // create a new album from selected photos
+  const handleCreateAlbumClick = () => {
+    handleTitleFormShow();
+    setPickedPhoto([]);
+  };
+
+  //  if photos were selected renders the button for creating a new album
+  // if photos weren't selected renders the button for adding o new photos
+  const renderButton = () => {
+    if (pickedPhotos.length <= 0) {
+      return (
+        <Button variant="outline-dark" onClick={handleUploadFormShow}>
+          Add photo
+        </Button>
+      );
+    } else {
+      return (
+        <Button variant="outline-dark" onClick={handleCreateAlbumClick}>
+          Create a new Album
+        </Button>
+      );
+    }
+  };
   // modal upload photo
   const [showUploadForm, setShowUploadForm] = useState(false);
   const handleUploadFormClose = () => setShowUploadForm(false);
@@ -33,8 +65,8 @@ const AlbumPage = () => {
     <>
       <Container>
         <Row className="my-4 align-items-center">
-          <Col md={8} className="d-flex align-items-center">
-            <h1 className="">
+          <Col sm={12} md={9} className="d-flex align-items-center">
+            <h1>
               {title}{" "}
               <span className="fs-6 text-secondary">
                 {data && `(${data.length} photos)`}
@@ -50,10 +82,8 @@ const AlbumPage = () => {
               <BsFillShareFill onClick={handleLinkToShareShow} color={"gray"} />
             </div>
           </Col>
-          <Col className="text-end">
-            <Button variant="outline-dark" onClick={handleUploadFormShow}>
-              Add photo
-            </Button>
+          <Col sm={12} md={3} className="text-end">
+            {renderButton()}
           </Col>
         </Row>
         <hr />
@@ -67,18 +97,12 @@ const AlbumPage = () => {
         <Row className="my-5">
           {data &&
             data.map((photo) => (
-              <Card style={{ width: "10rem" }} className="m-1" key={uuidv4()}>
-                <figure className="figure">
-                  <img
-                    src={photo.url}
-                    className="figure-img img-fluid rounded"
-                    alt={photo.name}
-                  />
-                  <figcaption className="figure-caption">
-                    {photo.name}
-                  </figcaption>
-                </figure>
-              </Card>
+              <PhotoCard
+                url={photo.url}
+                name={photo.name}
+                id={photo._id}
+                key={uuidv4()}
+              />
             ))}
         </Row>
       </Container>
@@ -91,7 +115,13 @@ const AlbumPage = () => {
       <ChangeTitleForm
         show={showTitleForm}
         handleClose={handleTitleFormClose}
-        data={data}
+        data={
+          pickedPhotos.length > 0
+            ? pickedPhotos.map((id) => {
+                return { _id: id };
+              })
+            : data
+        }
       />
       <LinkToChare
         show={showLinkToShare}

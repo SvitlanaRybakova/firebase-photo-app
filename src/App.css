@@ -24,3 +24,23 @@
   font-size: 1rem;
   height: 1.5rem;
 }
+
+.figure {
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.photo-card {
+  max-width: 10rem !important;
+  padding: 0 !important;
+  padding-top: 30px !important;
+  margin: 5px;
+  cursor: pointer;
+  border: none !important;
+}
+
+.photo-card:hover {
+  background-color: #87ceeb4a;
+}

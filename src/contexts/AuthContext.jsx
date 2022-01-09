@@ -6,7 +6,6 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
-  getAuth,
 } from "firebase/auth";
 import { PuffLoader } from "react-spinners";
 import { auth } from "../firebase";
@@ -25,11 +24,11 @@ const AuthContextProvider = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  	const setDisplayName = (name) => {
-      return updateProfile(currentUser, {
-        displayName: name,
-      });
-    };
+  const setDisplayName = (name) => {
+    return updateProfile(currentUser, {
+      displayName: name,
+    });
+  };
 
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -43,7 +42,6 @@ const AuthContextProvider = ({ children }) => {
     return sendPasswordResetEmail(auth, email);
   };
 
-  
   // add auth-state-observer (listen for auth-state changes)
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
