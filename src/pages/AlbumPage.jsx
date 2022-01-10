@@ -4,6 +4,7 @@ import { Container, Row, Col, Button, Alert } from "react-bootstrap";
 import { PuffLoader } from "react-spinners";
 import { BsFillShareFill } from "react-icons/bs";
 import { AiFillEdit } from "react-icons/ai";
+import { SRLWrapper } from "simple-react-lightbox";
 import { v4 as uuidv4 } from "uuid";
 
 import useGetPhotosFromAlbum from "../hooks/useGetPhotosFromAlbum";
@@ -61,6 +62,24 @@ const AlbumPage = () => {
   const handleLinkToShareClose = () => setShowLinkToShare(false);
   const handleLinkToShareShow = () => setShowLinkToShare(true);
 
+  	const options = {
+      settings: {
+        overlayColor: "#6c757df9",
+        autoplaySpeed: 1500,
+        transitionSpeed: 900,
+      },
+      buttons: {
+        backgroundColor: "#49505",
+        iconColor: "#495057",
+      },
+      caption: {
+        captionColor: "#dee2e6",
+        captionFontFamily: "Raleway, sans-serif",
+        captionFontWeight: "300",
+        captionTextTransform: "uppercase",
+      },
+    };
+
   return (
     <>
       <Container>
@@ -94,17 +113,19 @@ const AlbumPage = () => {
         )}
         {isError && <Alert variant="warning">{error.message}</Alert>}
 
-        <Row className="my-5">
-          {data &&
-            data.map((photo) => (
-              <PhotoCard
-                url={photo.url}
-                name={photo.name}
-                id={photo._id}
-                key={uuidv4()}
-              />
-            ))}
-        </Row>
+        <SRLWrapper options={options}>
+          <Row className="my-5">
+            {data &&
+              data.map((photo) => (
+                <PhotoCard
+                  url={photo.url}
+                  name={photo.name}
+                  id={photo._id}
+                  key={uuidv4()}
+                />
+              ))}
+          </Row>
+        </SRLWrapper>
       </Container>
       {/* modals */}
       <UploadPhotoForm

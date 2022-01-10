@@ -19,10 +19,14 @@ const PhotoCard = ({ url, name, id }) => {
   return (
     <Card className="photo-card">
       <div
-        style={{ width: "20px", height: "20px", border: "1px solid gray" }}
+        className="check-box"
         onClick={() => handleOnChange(id)}
       >
-        {pickedPhotos.includes(id) ? <GiCheckMark /> : ""}
+        {pickedPhotos.includes(id) ? (
+          <GiCheckMark className="mb-3" color={"green"} />
+        ) : (
+          ""
+        )}
       </div>
       <figure className="figure">
         <img src={url} className="figure-img img-fluid rounded" alt={name} />

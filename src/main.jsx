@@ -2,8 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
+import SimpleReactLightbox from "simple-react-lightbox";
 import AuthContextProvider from "./contexts/AuthContext";
-import PhotosContextProvider from './contexts/PhotosContext'
+import PhotosContextProvider from "./contexts/PhotosContext";
 import "./index.css";
 import App from "./App";
 
@@ -23,7 +24,9 @@ ReactDOM.render(
       <BrowserRouter>
         <AuthContextProvider>
           <PhotosContextProvider>
-            <App />
+            <SimpleReactLightbox>
+              <App />
+            </SimpleReactLightbox>
           </PhotosContextProvider>
         </AuthContextProvider>
       </BrowserRouter>
