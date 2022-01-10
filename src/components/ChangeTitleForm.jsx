@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Alert, Modal, Form } from "react-bootstrap";
 import { PuffLoader } from "react-spinners";
 import { useAuthContext } from "../contexts/AuthContext";
+import { usePhotosContext } from "../contexts/PhotosContext";
 import useChangeAlbumName from "../hooks/useChangeAlbumName";
 
 const ChangeTitle = ({ show, handleClose, data }) => {
@@ -10,6 +11,7 @@ const ChangeTitle = ({ show, handleClose, data }) => {
   const { currentUser } = useAuthContext();
   const navigate = useNavigate();
   const { changeAlbumName, error, isError, isMutating } = useChangeAlbumName();
+  const { setPickedPhoto } = usePhotosContext();
 
   const handleChangeTitleClick = (newName, data) => {
     if (!newName) {
@@ -17,6 +19,7 @@ const ChangeTitle = ({ show, handleClose, data }) => {
     }
     changeAlbumName(newName, data);
     navigate(`/${currentUser.uid}/${newName}`);
+    setPickedPhoto([]);
     handleClose();
   };
 

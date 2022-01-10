@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { doc,updateDoc,} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
 
 const useChangeAlbumName = () => {
   const { currentUser } = useAuthContext();
- 
+
   const [error, setError] = useState(null);
   const [isError, setIsError] = useState(null);
   const [isMutating, setIsMutating] = useState(null);
@@ -25,7 +25,6 @@ const useChangeAlbumName = () => {
     setIsMutating(true);
     try {
       data.forEach(async (photo) => {
-        console.log(photo, photo._id);
         await mutate(photo._id, newTitle);
       });
     } catch (e) {

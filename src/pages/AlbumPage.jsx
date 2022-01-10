@@ -18,7 +18,7 @@ const AlbumPage = () => {
   const { title } = useParams();
   const { data, isLoading, error, isError } = useGetPhotosFromAlbum(title);
 
-  const { pickedPhotos, setPickedPhoto } = usePhotosContext();
+  const { pickedPhotos } = usePhotosContext();
 
   useEffect(() => {
     renderButton();
@@ -27,7 +27,6 @@ const AlbumPage = () => {
   // create a new album from selected photos
   const handleCreateAlbumClick = () => {
     handleTitleFormShow();
-    setPickedPhoto([]);
   };
 
   //  if photos were selected renders the button for creating a new album
@@ -41,7 +40,10 @@ const AlbumPage = () => {
       );
     } else {
       return (
-        <Button variant="outline-dark" onClick={handleCreateAlbumClick}>
+        <Button
+          variant="outline-dark"
+          onClick={(e) => handleCreateAlbumClick(e)}
+        >
           Create a new Album
         </Button>
       );
@@ -62,23 +64,23 @@ const AlbumPage = () => {
   const handleLinkToShareClose = () => setShowLinkToShare(false);
   const handleLinkToShareShow = () => setShowLinkToShare(true);
 
-  	const options = {
-      settings: {
-        overlayColor: "#6c757df9",
-        autoplaySpeed: 1500,
-        transitionSpeed: 900,
-      },
-      buttons: {
-        backgroundColor: "#49505",
-        iconColor: "#495057",
-      },
-      caption: {
-        captionColor: "#dee2e6",
-        captionFontFamily: "Raleway, sans-serif",
-        captionFontWeight: "300",
-        captionTextTransform: "uppercase",
-      },
-    };
+  const options = {
+    settings: {
+      overlayColor: "#6c757df9",
+      autoplaySpeed: 1500,
+      transitionSpeed: 900,
+    },
+    buttons: {
+      backgroundColor: "#49505",
+      iconColor: "#495057",
+    },
+    caption: {
+      captionColor: "#dee2e6",
+      captionFontFamily: "Raleway, sans-serif",
+      captionFontWeight: "300",
+      captionTextTransform: "uppercase",
+    },
+  };
 
   return (
     <>
@@ -137,11 +139,11 @@ const AlbumPage = () => {
         show={showTitleForm}
         handleClose={handleTitleFormClose}
         data={
-          pickedPhotos.length > 0
-            ? pickedPhotos.map((id) => {
+          pickedPhotos.length <= 0
+            ? data
+            : pickedPhotos.map((id) => {
                 return { _id: id };
               })
-            : data
         }
       />
       <LinkToChare
