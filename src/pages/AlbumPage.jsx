@@ -8,6 +8,7 @@ import { SRLWrapper } from "simple-react-lightbox";
 import { v4 as uuidv4 } from "uuid";
 
 import useGetPhotosFromAlbum from "../hooks/useGetPhotosFromAlbum";
+import { useAuthContext } from "../contexts/AuthContext";
 import { usePhotosContext } from "../contexts/PhotosContext";
 import PhotoCard from "../components/PhotoCard";
 import UploadPhotoForm from "../components/UploadPhotoForm";
@@ -16,12 +17,13 @@ import LinkToChare from "../components/LinkToShare";
 
 const AlbumPage = () => {
   const { title } = useParams();
-  const { data, isLoading, error, isError } = useGetPhotosFromAlbum(title);
+  const { data, isLoading, isError } = useGetPhotosFromAlbum(title);
+  const { currentUser } = useAuthContext();
 
   const { pickedPhotos } = usePhotosContext();
 
   useEffect(() => {
-    renderButton();
+    renderAuthUserButton();
   }, [pickedPhotos]);
 
   // create a new album from selected photos
@@ -31,7 +33,7 @@ const AlbumPage = () => {
 
   //  if photos were selected renders the button for creating a new album
   // if photos weren't selected renders the button for adding o new photos
-  const renderButton = () => {
+  const renderAuthUserButton = () => {
     if (pickedPhotos.length <= 0) {
       return (
         <Button variant="outline-dark" onClick={handleUploadFormShow}>
@@ -88,32 +90,39 @@ const AlbumPage = () => {
         <Row className="my-4 align-items-center">
           <Col sm={12} md={9} className="d-flex align-items-center">
             <h1>
-              {title}{" "}
+              {title}
               <span className="fs-6 text-secondary">
                 {data && `(${data.length} photos)`}
               </span>
             </h1>
-            <div style={{ cursor: "pointer", marginLeft: "60px" }}>
-              <AiFillEdit
-                style={{ marginRight: "30px" }}
-                onClick={handleTitleFormShow}
-                color={"gray"}
-                size={20}
-              />
-              <BsFillShareFill onClick={handleLinkToShareShow} color={"gray"} />
-            </div>
+            {currentUser && (
+              <div style={{ cursor: "pointer", marginLeft: "60px" }}>
+                <AiFillEdit
+                  style={{ marginRight: "30px" }}
+                  onClick={handleTitleFormShow}
+                  color={"gray"}
+                  size={20}
+                />
+                <BsFillShareFill
+                  onClick={handleLinkToShareShow}
+                  color={"gray"}
+                />
+              </div>
+            )}
           </Col>
           <Col sm={12} md={3} className="text-end">
-            {renderButton()}
+            {currentUser && renderAuthUserButton()}
           </Col>
         </Row>
         <hr />
         {isLoading && (
-          <div style={{ position: "absolute", top: "175px", right: "55%" }}>
+          <div style={{ position: "absolute", top: "205px", right: "55%" }}>
             <PuffLoader color={"#888"} size={50} />{" "}
           </div>
         )}
-        {isError && <Alert variant="warning">{error.message}</Alert>}
+        {isError && !data && (
+          <Alert variant="warning">{"This album has been not found"}</Alert>
+        )}
 
         <SRLWrapper options={options}>
           <Row className="my-5">

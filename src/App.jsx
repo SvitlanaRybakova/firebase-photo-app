@@ -11,15 +11,21 @@ import SignupPage from "./pages/SignUp";
 import ResetPasswordPage from "./pages/ResetPassword";
 import AlbumPage from "./pages/AlbumPage";
 import PageNotFound from "./pages/PageNotFound";
+import { findUserId } from "./servises/user";
 
 function App() {
   const { currentUser } = useAuthContext();
+
   return (
     <div className="App">
       <Navigation />
       <Routes>
         {/* Public routes */}
-        <Route path={`/${currentUser.uid}/:title`} element={<AlbumPage />} />
+        <Route
+          path={`/${currentUser ? currentUser.uid : findUserId()}/:title`}
+          element={<AlbumPage />}
+        />
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
