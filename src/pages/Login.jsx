@@ -29,7 +29,7 @@ const Login = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    console.log(emailRef.current.value, passwordRef.current.value);
+    console.warn(emailRef.current.value, passwordRef.current.value);
     // login
     try {
       setLoading(true);

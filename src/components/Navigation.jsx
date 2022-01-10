@@ -19,7 +19,7 @@ const Navigation = () => {
       /* Catch error */
     } catch (err) {
       setError(err.message);
-      console.log("Log Out error", error);
+      console.warn("Log Out error", error);
     }
   };
 

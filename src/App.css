@@ -39,10 +39,11 @@
   margin: 5px;
   cursor: pointer;
   border: none !important;
+  background-color: #efefef !important;
 }
 
 .photo-card:hover {
-  background-color: #87ceeb4a;
+  background-color: #87ceeb4a !important;
 }
 
 .check-box {
@@ -50,4 +51,10 @@
   height: 20px;
   border: 1px solid#adb5bd;
   margin-bottom: 5px;
+}
+
+.like-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }

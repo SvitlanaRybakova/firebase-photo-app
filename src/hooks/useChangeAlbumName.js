@@ -2,6 +2,7 @@ import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
+import { findUserId } from "../servises/user";
 
 const useChangeAlbumName = () => {
   const { currentUser } = useAuthContext();
@@ -12,7 +13,11 @@ const useChangeAlbumName = () => {
   const [isSuccess, setIsSuccess] = useState(null);
 
   const mutate = async (id, newTitle) => {
-    const ref = doc(db, `${currentUser.uid}`, `${id}`);
+    const ref = doc(
+      db,
+      `${currentUser ? currentUser.uid : findUserId()}`,
+      `${id}`
+    );
     await updateDoc(ref, {
       album: newTitle,
     });

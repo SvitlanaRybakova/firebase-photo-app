@@ -59,6 +59,7 @@ const useUploadPhoto = () => {
       path: storageRef.fullPath,
       size: photo.size,
       type: photo.type,
+      isLike:null,
       url,
     });
   };

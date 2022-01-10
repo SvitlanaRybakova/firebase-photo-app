@@ -42,10 +42,7 @@ const AlbumPage = () => {
       );
     } else {
       return (
-        <Button
-          variant="outline-dark"
-          onClick={(e) => handleCreateAlbumClick(e)}
-        >
+        <Button variant="outline-dark" onClick={handleCreateAlbumClick}>
           Create a new Album
         </Button>
       );
@@ -112,9 +109,25 @@ const AlbumPage = () => {
           </Col>
           <Col sm={12} md={3} className="text-end">
             {currentUser && renderAuthUserButton()}
+            {!currentUser &&
+              data?.filter((photo) => photo.isLike === true).length > 0 && (
+                <Button variant="outline-dark" onClick={handleCreateAlbumClick}>
+                  Create a new Album
+                </Button>
+              )}
           </Col>
         </Row>
         <hr />
+        <div className="text-center h-50">
+          {!currentUser && data?.filter((photo) => photo.isLike === true).length > 0 && (
+            <span>
+              Selected
+              {data?.filter((photo) => photo.isLike === true).length}
+              photo(s) from
+              {data.length}
+            </span>
+          )}
+        </div>
         {isLoading && (
           <div style={{ position: "absolute", top: "205px", right: "55%" }}>
             <PuffLoader color={"#888"} size={50} />{" "}
@@ -125,13 +138,14 @@ const AlbumPage = () => {
         )}
 
         <SRLWrapper options={options}>
-          <Row className="my-5">
+          <Row>
             {data &&
               data.map((photo) => (
                 <PhotoCard
                   url={photo.url}
                   name={photo.name}
                   id={photo._id}
+                  isLike={photo.isLike}
                   key={uuidv4()}
                 />
               ))}
@@ -148,11 +162,13 @@ const AlbumPage = () => {
         show={showTitleForm}
         handleClose={handleTitleFormClose}
         data={
-          pickedPhotos.length <= 0
-            ? data
-            : pickedPhotos.map((id) => {
-                return { _id: id };
-              })
+          currentUser
+            ? pickedPhotos.length <= 0
+              ? data
+              : pickedPhotos.map((id) => {
+                  return { _id: id };
+                })
+            : data?.filter((photo) => photo.isLike === true)
         }
       />
       <LinkToChare
