@@ -4,11 +4,13 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useAuthContext } from "./contexts/AuthContext";
 import Navigation from "./components/Navigation";
+import RequireAuth from "./components/RequireAuth";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/SignUp";
 import ResetPasswordPage from "./pages/ResetPassword";
 import AlbumPage from "./pages/AlbumPage";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const { currentUser } = useAuthContext();
@@ -16,12 +18,22 @@ function App() {
     <div className="App">
       <Navigation />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        {/* Public routes */}
+        <Route path={`/${currentUser.uid}/:title`} element={<AlbumPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-        {/* todo Public !*/}
-        <Route path={`/${currentUser.uid}/:title`} element={<AlbumPage />} />
+        <Route path="*" element={<PageNotFound />} />
+
+        {/* Private Public !*/}
+        <Route
+          path="/"
+          element={
+            <RequireAuth redirectTo="/login">
+              <HomePage />
+            </RequireAuth>
+          }
+        />
       </Routes>
       <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </div>
