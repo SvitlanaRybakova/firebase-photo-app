@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
 import { groupBy } from "lodash";
@@ -28,8 +23,9 @@ const useGetAllAlbums = () => {
       });
       // group all photos in album
       const albums = Object.entries(groupBy(data, "album")).map(
-        ([, v]) => v[0]);
-    
+        ([, v]) => v[0]
+      );
+
       setData(albums);
     });
     return unsubscribe;

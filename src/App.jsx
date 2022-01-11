@@ -1,6 +1,7 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { ReactQueryDevtools } from "react-query/devtools";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useAuthContext } from "./contexts/AuthContext";
 import Navigation from "./components/Navigation";

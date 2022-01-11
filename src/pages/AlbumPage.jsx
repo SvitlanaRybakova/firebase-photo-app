@@ -14,12 +14,12 @@ import PhotoCard from "../components/PhotoCard";
 import UploadPhotoForm from "../components/UploadPhotoForm";
 import ChangeTitleForm from "../components/ChangeTitleForm";
 import LinkToChare from "../components/LinkToShare";
+import { options } from "../servises/srlWrapperOptions";
 
 const AlbumPage = () => {
   const { title } = useParams();
   const { data, isLoading, isError } = useGetPhotosFromAlbum(title);
   const { currentUser } = useAuthContext();
-
   const { pickedPhotos } = usePhotosContext();
 
   useEffect(() => {
@@ -62,24 +62,6 @@ const AlbumPage = () => {
   const [showLinkToShare, setShowLinkToShare] = useState(false);
   const handleLinkToShareClose = () => setShowLinkToShare(false);
   const handleLinkToShareShow = () => setShowLinkToShare(true);
-
-  const options = {
-    settings: {
-      overlayColor: "#6c757df9",
-      autoplaySpeed: 1500,
-      transitionSpeed: 900,
-    },
-    buttons: {
-      backgroundColor: "#49505",
-      iconColor: "#495057",
-    },
-    caption: {
-      captionColor: "#dee2e6",
-      captionFontFamily: "Raleway, sans-serif",
-      captionFontWeight: "300",
-      captionTextTransform: "uppercase",
-    },
-  };
 
   return (
     <>

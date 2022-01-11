@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useAuthContext } from "../contexts/AuthContext";
 import { db, storage } from "../firebase";
-import { v4 as uuidv4 } from "uuid";
 
 const useUploadPhoto = () => {
   const [error, setError] = useState(null);
@@ -48,7 +43,6 @@ const useUploadPhoto = () => {
     // save in db
     // create reference to db-collection related to user.id
     const collectionRef = collection(db, `${currentUser.uid}`);
-   
 
     // create document in db for the uploaded photo
     await addDoc(collectionRef, {
@@ -59,11 +53,11 @@ const useUploadPhoto = () => {
       path: storageRef.fullPath,
       size: photo.size,
       type: photo.type,
-      isLike:null,
+      isLike: null,
       url,
     });
   };
-  
+
   const mutate = async (photos, albumName) => {
     setError(null);
     setIsError(null);
