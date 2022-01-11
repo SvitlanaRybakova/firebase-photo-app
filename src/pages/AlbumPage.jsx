@@ -62,7 +62,7 @@ const AlbumPage = () => {
   const [showLinkToShare, setShowLinkToShare] = useState(false);
   const handleLinkToShareClose = () => setShowLinkToShare(false);
   const handleLinkToShareShow = () => setShowLinkToShare(true);
-
+  console.log(currentUser);
   return (
     <>
       <Container>
@@ -91,11 +91,16 @@ const AlbumPage = () => {
           </Col>
           <Col sm={12} md={3} className="text-end">
             {currentUser && renderAuthUserButton()}
+            {/* button send photo back to photographer. Renders only if user rated all photos  */}
             {!currentUser &&
-              data?.filter((photo) => photo.isLike === true).length > 0 && (
+              data?.filter((photo) => photo.isLike === null).length <= 0 && (
                 <Button variant="outline-dark" onClick={handleCreateAlbumClick}>
                   Create a new Album
                 </Button>
+              )}
+            {!currentUser &&
+              data?.filter((photo) => photo.isLike === null).length > 0 && (
+                <span className="text-danger">You should rate all photos</span>
               )}
           </Col>
         </Row>
