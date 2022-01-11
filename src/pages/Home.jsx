@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Button } from "react-bootstrap";
+import { Container, Button, Row } from "react-bootstrap";
 import { AiOutlinePlus } from "react-icons/ai";
 import UploadPhotoForm from "../components/UploadPhotoForm";
 import useGetAllAlbums from "../hooks/useGetAllAlbums";
@@ -26,9 +26,9 @@ const Home = () => {
           <span className="mx-3">Add a new album</span>
         </Button>
         <h1>Here are all your photo albums</h1>
-        <div className="d-flex flex-wrap align-items-center justify-content-between">
+        <Row >
           {data && <AlbumGrid data={data} />}
-        </div>
+        </Row>
         <UploadPhotoForm show={show} handleClose={handleClose} />
       </Container>
     </>

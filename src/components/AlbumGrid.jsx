@@ -10,8 +10,8 @@ const AlbumGrid = ({ data}) => {
   const navigation = useNavigate();
 
   return data.map((album) => (
-    <Card style={{ width: "10rem" }} className="my-3" key={uuidv4()}>
-      <Card.Img style={{ height: "9rem" }} variant="top" src={album.url} />
+    <Card style={{ width: "12rem" }} className="m-2 p-0" key={uuidv4()}>
+      <Card.Img style={{ height: "9rem" }} className="album-photo" variant="top" src={album.url} />
       <Card.Body>
         <Card.Title>{album.album}</Card.Title>
         <Button

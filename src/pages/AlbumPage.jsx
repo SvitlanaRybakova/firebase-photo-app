@@ -86,7 +86,7 @@ const AlbumPage = () => {
       <Container>
         <Row className="my-4 align-items-center">
           <Col sm={12} md={9} className="d-flex align-items-center">
-            <h1>
+            <h1 className="album-name">
               {title}
               <span className="fs-6 text-secondary">
                 {data && `(${data.length} photos)`}

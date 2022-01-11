@@ -1,6 +1,10 @@
+import { identity } from "lodash";
+
 export function findUserId() {
   const url = window.location.href;
-  var matches = url.match(/(\/[\w+-]+)/g);
-  
-  return matches[1].replace("/", "")
+  const matches = url.match(/(\/[\w+-]+)/g);
+  if(matches.length > 1){
+    return matches[1].replace("/", "")
+  }
+  return null
 }

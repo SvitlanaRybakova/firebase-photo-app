@@ -4,13 +4,12 @@ import { db } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
 import { findUserId } from "../servises/user";
 
-
 const useGetPhotosFromAlbum = (title) => {
   const { currentUser } = useAuthContext();
   const queryRef = query(
     collection(db, `${currentUser ? currentUser.uid : findUserId()}`),
-    where("album", "==", title),
-    orderBy("created", "desc")
+    where("album", "==", title)
+    // orderBy("created", "desc")
   );
   const photosQuery = useFirestoreQueryData(
     ["photos", title],
