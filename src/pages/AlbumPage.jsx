@@ -62,7 +62,7 @@ const AlbumPage = () => {
   const [showLinkToShare, setShowLinkToShare] = useState(false);
   const handleLinkToShareClose = () => setShowLinkToShare(false);
   const handleLinkToShareShow = () => setShowLinkToShare(true);
-  console.log(currentUser);
+  console.log(data);
   return (
     <>
       <Container>
@@ -93,6 +93,7 @@ const AlbumPage = () => {
             {currentUser && renderAuthUserButton()}
             {/* button send photo back to photographer. Renders only if user rated all photos  */}
             {!currentUser &&
+              data?.length > 0 &&
               data?.filter((photo) => photo.isLike === null).length <= 0 && (
                 <Button variant="outline-dark" onClick={handleCreateAlbumClick}>
                   Create a new Album
@@ -125,6 +126,9 @@ const AlbumPage = () => {
           <Alert variant="warning">{"This album has been not found"}</Alert>
         )}
 
+        {data?.length <= 0 && (
+          <Alert variant="warning">{"This album has been not found"}</Alert>
+        )}
         <SRLWrapper options={options}>
           <Row>
             {data &&
