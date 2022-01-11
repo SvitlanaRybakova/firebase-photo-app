@@ -25,7 +25,7 @@ const PhotoCard = ({ url, name, id, isLike }) => {
       {currentUser && (
         <div className="check-box" onClick={() => handleOnChange(id)}>
           {pickedPhotos.includes(id) ? (
-            <GiCheckMark className="mb-3" color={"green"} />
+            <GiCheckMark className="check-mark" color={"green"} />
           ) : (
             ""
           )}

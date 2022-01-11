@@ -118,16 +118,17 @@ const AlbumPage = () => {
           </Col>
         </Row>
         <hr />
-        <div className="text-center h-50">
-          {!currentUser && data?.filter((photo) => photo.isLike === true).length > 0 && (
-            <span>
-              Selected
-              {data?.filter((photo) => photo.isLike === true).length}
-              photo(s) from
-              {data.length}
-            </span>
-          )}
-        </div>
+        <Row className="text-center" style={{ height: "30px" }}>
+          {!currentUser &&
+            data?.filter((photo) => photo.isLike === true).length > 0 && (
+              <span>
+                Selected&nbsp;
+                {data?.filter((photo) => photo.isLike === true).length}
+                &nbsp;photo(s) from&nbsp;
+                {data.length}
+              </span>
+            )}
+        </Row>
         {isLoading && (
           <div style={{ position: "absolute", top: "205px", right: "55%" }}>
             <PuffLoader color={"#888"} size={50} />{" "}

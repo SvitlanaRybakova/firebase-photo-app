@@ -51,6 +51,11 @@
   height: 20px;
   border: 1px solid#adb5bd;
   margin-bottom: 5px;
+  position: relative;
+}
+
+.check-mark {
+position: absolute;
 }
 
 .like-button {
