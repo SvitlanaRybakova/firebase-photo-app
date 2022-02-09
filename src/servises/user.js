@@ -1,4 +1,3 @@
-import { identity } from "lodash";
 
 export function findUserId() {
   const url = window.location.href;

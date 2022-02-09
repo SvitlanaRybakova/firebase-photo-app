@@ -8,16 +8,19 @@ const usePhotosContext = () => {
 const PhotosContextProvider = ({ children }) => {
   const [pickedPhotos, setPickedPhoto] = useState([]);
 
-  const handleOnChange = (id) => {
-    // delete existing id
-    if (pickedPhotos.includes(id)) {
-      setPickedPhoto(pickedPhotos.filter((existingId) => existingId != id));
-      // add the photo if id is unique
+  const handleOnChange = (id, photo) => {
+    if (pickedPhotos.length <= 0) {
+      setPickedPhoto([photo]);
     } else {
-      setPickedPhoto((prevState) => [...prevState, id]);
+      const existingPhoto = pickedPhotos.find((el) => el.id == id);
+      if (existingPhoto != undefined) {
+        setPickedPhoto(pickedPhotos.filter((el) => el.id != id));
+      } else {
+        setPickedPhoto((prevState) => [...prevState, photo]);
+      }
     }
   };
-
+ 
   const values = {
     pickedPhotos,
     setPickedPhoto,

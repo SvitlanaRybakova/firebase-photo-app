@@ -9,8 +9,8 @@ import { usePhotosContext } from "../contexts/PhotosContext";
 import { useAuthContext } from "../contexts/AuthContext";
 import useLike from "../hooks/useLike";
 
-const PhotoCard = ({ url, name, id, isLike }) => {
-  const { setPickedPhoto, pickedPhotos, handleOnChange } = usePhotosContext();
+const PhotoCard = ({ url, name, id, isLike, path, size, type }) => {
+  const { pickedPhotos, handleOnChange } = usePhotosContext();
   const { currentUser } = useAuthContext();
   const { likeMutate } = useLike();
 
@@ -19,16 +19,31 @@ const PhotoCard = ({ url, name, id, isLike }) => {
     likeMutate(id, isLike);
   };
 
+  const photo = {
+    url,
+    name,
+    id,
+    path,
+    size,
+    type,
+  };
+
+  const renderCheckBox = () => {
+    return pickedPhotos.map((el) => {
+      if (el.id === id) {
+        return (
+          <GiCheckMark key={el.id} className="check-mark" color={"green"} />
+        );
+      }
+    });
+  };
+
   return (
     <Card className="photo-card">
       {/* render checkbox for auth user */}
       {currentUser && (
-        <div className="check-box" onClick={() => handleOnChange(id)}>
-          {pickedPhotos.includes(id) ? (
-            <GiCheckMark className="check-mark" color={"green"} />
-          ) : (
-            ""
-          )}
+        <div className="check-box" onClick={() => handleOnChange(id, photo)}>
+          {renderCheckBox()}
         </div>
       )}
       <figure className="figure">
@@ -37,7 +52,10 @@ const PhotoCard = ({ url, name, id, isLike }) => {
       </figure>
       {/* render like btn for unauth user */}
       {!currentUser && (
-        <Card.Footer className="d-flex justify-content-around " style={{backgroundColor: "transparent"}}>
+        <Card.Footer
+          className="d-flex justify-content-around "
+          style={{ backgroundColor: "transparent" }}
+        >
           <button
             className="like-button"
             onClick={() => toggleLike(id, true)}

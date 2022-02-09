@@ -1,36 +1,36 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Alert, Modal, Form } from "react-bootstrap";
-import { PuffLoader } from "react-spinners";
+import useCreateAlbumForPickedPhoto from "../hooks/useCreateAlbumForPickedPhoto";
 import { useAuthContext } from "../contexts/AuthContext";
-import { usePhotosContext } from "../contexts/PhotosContext";
-import useChangeAlbumName from "../hooks/useChangeAlbumName";
-import ConfirmModal from "../components/ConfirmModal";
 
-const ChangeTitle = ({ show, handleClose, data, title }) => {
-  const [showConfirm, setShow] = useState(false);
-
-  const handleCloseConfirm = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const albumNameRef = useRef();
+const CreateAlbumForPickedPhoto = ({
+  show,
+  handleClose,
+  data,
+  setPickedPhoto,
+}) => {
+  const newAlbumNameRef = useRef();
   const { currentUser } = useAuthContext();
+  const {
+    error,
+    isError,
+    isMutating,
+    isSuccess,
+    mutate,
+  } = useCreateAlbumForPickedPhoto();
   const navigate = useNavigate();
-  const { changeAlbumName, error, isError, isMutating } = useChangeAlbumName();
-  const { setPickedPhoto } = usePhotosContext();
 
-  const handleChangeTitleClick = (newName, data) => {
-    if (!newName) {
-      return;
-    }
-    changeAlbumName(newName, data);
+  console.log("data from Create album for picked photo modal", data);
+
+  const handleClick = () => {
+    mutate(data, newAlbumNameRef.current.value);
     if (currentUser) {
-      navigate(`/${currentUser.uid}/${newName}`);
+      setPickedPhoto([]);
+      navigate("/");
     }
-    setPickedPhoto([]);
-    handleClose();
+    navigate("/");
   };
-
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -39,24 +39,27 @@ const ChangeTitle = ({ show, handleClose, data, title }) => {
         </Modal.Header>
         <Modal.Body style={{ width: "90%" }}>
           <Form.Control
-            ref={albumNameRef}
+            ref={newAlbumNameRef}
             type="text"
-            placeholder={title? title :"Write a new name..." }
+            placeholder="Write a new name..."
             id="inputAlbumTitle"
             aria-describedby="albumTitle"
             required
             className={
-              !albumNameRef.current?.value
+              !newAlbumNameRef.current?.value
                 ? "border border-danger"
                 : "border border-secondary"
             }
           />
-          <div style={{ height: "60px", margin: "0 1rem  1rem  1rem" }}>
+          <div style={{ height: "60px", margin: "0 1rem  1rem  1rem", padding:"10px"}}>
             {isError && <Alert variant="danger">{error}</Alert>}
             {isMutating && (
               <div style={{ position: "absolute", top: "75px", right: "55%" }}>
                 <PuffLoader color={"#888"} size={50} />{" "}
               </div>
+            )}
+            {isSuccess && (
+              <Alert variant="success">"The new album has been created"</Alert>
             )}
           </div>
         </Modal.Body>
@@ -64,17 +67,14 @@ const ChangeTitle = ({ show, handleClose, data, title }) => {
           <Button
             className="my-3 text-right"
             variant="outline-dark"
-            onClick={() =>
-              handleChangeTitleClick(albumNameRef.current.value, data)
-            }
+            onClick={handleClick}
           >
             Save
           </Button>
         </Modal.Footer>
       </Modal>
-      <ConfirmModal show={showConfirm} handleClose={handleCloseConfirm} />
     </>
   );
 };
 
-export default ChangeTitle;
+export default CreateAlbumForPickedPhoto;

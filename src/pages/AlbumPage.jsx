@@ -14,21 +14,23 @@ import PhotoCard from "../components/PhotoCard";
 import UploadPhotoForm from "../components/UploadPhotoForm";
 import ChangeTitleForm from "../components/ChangeTitleForm";
 import LinkToChare from "../components/LinkToShare";
+import CreateAlbumForPickedPhoto from "../components/CreateAlbumForPickedPhoto";
 import { options } from "../servises/srlWrapperOptions";
 
 const AlbumPage = () => {
   const { title } = useParams();
   const { data, isLoading, isError } = useGetPhotosFromAlbum(title);
   const { currentUser } = useAuthContext();
-  const { pickedPhotos } = usePhotosContext();
+  const { setPickedPhoto, pickedPhotos } = usePhotosContext();
 
   useEffect(() => {
     renderAuthUserButton();
   }, [pickedPhotos]);
 
+  console.log("picked photos", pickedPhotos);
   // create a new album from selected photos
   const handleCreateAlbumClick = () => {
-    handleTitleFormShow();
+    handleCreateNewAlbumShow();
   };
 
   //  if photos were selected renders the button for creating a new album
@@ -62,6 +64,11 @@ const AlbumPage = () => {
   const [showLinkToShare, setShowLinkToShare] = useState(false);
   const handleLinkToShareClose = () => setShowLinkToShare(false);
   const handleLinkToShareShow = () => setShowLinkToShare(true);
+
+  // modal create a new Album
+  const [showCreateNewAlbum, setShowCreateNewAlbum] = useState(false);
+  const handleCreateNewAlbumClose = () => setShowCreateNewAlbum(false);
+  const handleCreateNewAlbumShow = () => setShowCreateNewAlbum(true);
   console.log(data);
   return (
     <>
@@ -94,7 +101,7 @@ const AlbumPage = () => {
             {/* button send photo back to photographer. Renders only if user rated all photos  */}
             {!currentUser &&
               data?.length > 0 &&
-              data?.filter((photo) => photo.isLike === null).length <= 0 && (
+              data?.filter((photo) => photo.isLike === true).length > 0 && (
                 <Button variant="outline-dark" onClick={handleCreateAlbumClick}>
                   Create a new Album
                 </Button>
@@ -138,6 +145,9 @@ const AlbumPage = () => {
                   name={photo.name}
                   id={photo._id}
                   isLike={photo.isLike}
+                  path={photo.path}
+                  size={photo.size}
+                  type={photo.type}
                   key={uuidv4()}
                 />
               ))}
@@ -145,23 +155,31 @@ const AlbumPage = () => {
         </SRLWrapper>
       </Container>
       {/* modals */}
+      {/* add photo */}
       <UploadPhotoForm
         show={showUploadForm}
         handleClose={handleUploadFormClose}
         albumTitle={title}
       />
-      <ChangeTitleForm
-        show={showTitleForm}
-        handleClose={handleTitleFormClose}
+      {/* change album name (only for users!) */}
+      {currentUser && (
+        <ChangeTitleForm
+          show={showTitleForm}
+          handleClose={handleTitleFormClose}
+          data={data}
+          title={title}
+        />
+      )}
+      {/* create album for picked photo (copy photo to another album) */}
+      <CreateAlbumForPickedPhoto
+        show={showCreateNewAlbum}
+        handleClose={handleCreateNewAlbumClose}
         data={
           currentUser
-            ? pickedPhotos.length <= 0
-              ? data
-              : pickedPhotos.map((id) => {
-                  return { _id: id };
-                })
+            ? pickedPhotos
             : data?.filter((photo) => photo.isLike === true)
         }
+        setPickedPhoto={currentUser && setPickedPhoto}
       />
       <LinkToChare
         show={showLinkToShare}
