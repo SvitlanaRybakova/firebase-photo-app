@@ -21,16 +21,14 @@ const CreateAlbumForPickedPhoto = ({
   } = useCreateAlbumForPickedPhoto();
   const navigate = useNavigate();
 
-  console.log("data from Create album for picked photo modal", data);
-
   const handleClick = () => {
     mutate(data, newAlbumNameRef.current.value);
     if (currentUser) {
       setPickedPhoto([]);
       navigate("/");
     }
-    navigate("/");
   };
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -51,7 +49,13 @@ const CreateAlbumForPickedPhoto = ({
                 : "border border-secondary"
             }
           />
-          <div style={{ height: "60px", margin: "0 1rem  1rem  1rem", padding:"10px"}}>
+          <div
+            style={{
+              height: "60px",
+              margin: "0 1rem  1rem  1rem",
+              padding: "10px",
+            }}
+          >
             {isError && <Alert variant="danger">{error}</Alert>}
             {isMutating && (
               <div style={{ position: "absolute", top: "75px", right: "55%" }}>
@@ -71,6 +75,15 @@ const CreateAlbumForPickedPhoto = ({
           >
             Save
           </Button>
+          {!currentUser && (
+            <Button
+              className="my-3 text-right"
+              variant="outline-dark"
+              onClick={() => navigate("/")}
+            >
+              Close
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </>

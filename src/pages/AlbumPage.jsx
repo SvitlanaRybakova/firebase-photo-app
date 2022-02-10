@@ -27,7 +27,6 @@ const AlbumPage = () => {
     renderAuthUserButton();
   }, [pickedPhotos]);
 
-  console.log("picked photos", pickedPhotos);
   // create a new album from selected photos
   const handleCreateAlbumClick = () => {
     handleCreateNewAlbumShow();
@@ -69,7 +68,7 @@ const AlbumPage = () => {
   const [showCreateNewAlbum, setShowCreateNewAlbum] = useState(false);
   const handleCreateNewAlbumClose = () => setShowCreateNewAlbum(false);
   const handleCreateNewAlbumShow = () => setShowCreateNewAlbum(true);
-  console.log(data);
+
   return (
     <>
       <Container>
@@ -101,7 +100,8 @@ const AlbumPage = () => {
             {/* button send photo back to photographer. Renders only if user rated all photos  */}
             {!currentUser &&
               data?.length > 0 &&
-              data?.filter((photo) => photo.isLike === true).length > 0 && (
+              data?.filter((photo) => photo.isLike === true).length > 0 &&
+              data?.filter((photo) => photo.isLike === null).length <= 0 && (
                 <Button variant="outline-dark" onClick={handleCreateAlbumClick}>
                   Create a new Album
                 </Button>
@@ -109,6 +109,13 @@ const AlbumPage = () => {
             {!currentUser &&
               data?.filter((photo) => photo.isLike === null).length > 0 && (
                 <span className="text-danger">You should rate all photos</span>
+              )}
+            {!currentUser &&
+              data?.filter((photo) => photo.isLike === null).length === 0 &&
+              data?.filter((photo) => photo.isLike === true).length === 0 && (
+                <span className="text-danger">
+                  You should choose one photo at least
+                </span>
               )}
           </Col>
         </Row>
