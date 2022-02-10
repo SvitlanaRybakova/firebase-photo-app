@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Alert, Modal, Form } from "react-bootstrap";
 import useCreateAlbumForPickedPhoto from "../hooks/useCreateAlbumForPickedPhoto";
 import { useAuthContext } from "../contexts/AuthContext";
+import ConfirmModal from "./ConfirmModal";
 
 const CreateAlbumForPickedPhoto = ({
   show,
@@ -21,12 +22,19 @@ const CreateAlbumForPickedPhoto = ({
   } = useCreateAlbumForPickedPhoto();
   const navigate = useNavigate();
 
+  //confirm modal
+  const [showConfirm, setShowConfirm] = useState(true);
+  const handleConfirmClose = () => setShowConfirm(false);
+  const handleConfirmShow = () => setShowConfirm(true);
+
   const handleClick = () => {
     mutate(data, newAlbumNameRef.current.value);
     if (currentUser) {
       setPickedPhoto([]);
+      handleClose();
       navigate("/");
     }
+    handleClose();
   };
 
   return (
@@ -62,9 +70,6 @@ const CreateAlbumForPickedPhoto = ({
                 <PuffLoader color={"#888"} size={50} />{" "}
               </div>
             )}
-            {isSuccess && (
-              <Alert variant="success">"The new album has been created"</Alert>
-            )}
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -75,17 +80,11 @@ const CreateAlbumForPickedPhoto = ({
           >
             Save
           </Button>
-          {!currentUser && (
-            <Button
-              className="my-3 text-right"
-              variant="outline-dark"
-              onClick={() => navigate("/")}
-            >
-              Close
-            </Button>
-          )}
         </Modal.Footer>
       </Modal>
+      {isSuccess && (
+        <ConfirmModal show={showConfirm} handleClose={handleConfirmClose} />
+      )}
     </>
   );
 };

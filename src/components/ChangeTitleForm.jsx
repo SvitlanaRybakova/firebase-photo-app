@@ -41,7 +41,7 @@ const ChangeTitle = ({ show, handleClose, data, title }) => {
           <Form.Control
             ref={albumNameRef}
             type="text"
-            placeholder={title? title :"Write a new name..." }
+            defaultValue={title ? title : "Write a new name..."}
             id="inputAlbumTitle"
             aria-describedby="albumTitle"
             required
